@@ -48,3 +48,6 @@ This project intentionally prioritizes clarity and observability over production
 - Results are uploaded as build artifacts
 - Java Flight Recorder (JFR) is captured automatically
 - Enables post-run analysis of GC, allocation, and CPU behavior
+
+## Note: Architecture diagrams are authored in PlantUML and rendered automatically in CI as build artifacts.
+  

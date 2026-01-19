@@ -41,3 +41,10 @@ Data is durable **only after explicit flush**.
 
 ## Trade-offs
 This project intentionally prioritizes clarity and observability over production hardening.
+
+## Performance & Profiling
+
+- Lightweight benchmarks are executed in CI
+- Results are uploaded as build artifacts
+- Java Flight Recorder (JFR) is captured automatically
+- Enables post-run analysis of GC, allocation, and CPU behavior

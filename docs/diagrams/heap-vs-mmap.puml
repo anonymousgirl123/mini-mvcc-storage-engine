@@ -1,0 +1,32 @@
+@startuml
+title JVM Heap vs mmap vs Disk
+
+node "JVM Process" {
+    component "Heap\n(GC-managed)" as Heap
+    component "Off-Heap\n(MappedByteBuffer)" as OffHeap
+}
+
+node "Linux Kernel" {
+    component "Page Cache" as PageCache
+}
+
+database "Disk (SSD)" as Disk
+
+Heap --> OffHeap : serialize versions
+OffHeap --> PageCache : mmap()
+PageCache --> Disk : writeback / fsync
+
+note right of Heap
+  Fast access
+  GC pressure
+end note
+
+note right of PageCache
+  OS-managed
+  Page faults
+end note
+
+note right of Disk
+  Durable storage
+end note
+@enduml

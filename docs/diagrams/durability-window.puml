@@ -1,0 +1,24 @@
+@startuml
+title Write Path & Durability Guarantees
+
+participant "Application" as App
+participant "JVM" as JVM
+participant "Linux Page Cache" as Cache
+database "Disk" as Disk
+
+App -> JVM : write()
+JVM -> Cache : dirty page
+
+note right of Cache
+  Crash here:
+  mmap data may be lost
+end note
+
+App -> JVM : flush()
+JVM -> Cache : buffer.force()
+Cache -> Disk : fsync
+
+note right of Disk
+  Data durable
+end note
+@enduml

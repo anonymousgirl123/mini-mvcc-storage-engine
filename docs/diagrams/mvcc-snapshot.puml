@@ -1,0 +1,20 @@
+@startuml
+title MVCC Snapshot Isolation
+
+participant "Transaction T1\n(startTs=10)" as T1
+participant "Transaction T2\n(startTs=20)" as T2
+database "Version Chain (Key=X)" as VC
+
+T1 -> VC : read(X) @ ts=10
+VC --> T1 : v1
+
+T2 -> VC : write(X=v2)
+VC -> VC : mark v1.deletedTs=20
+VC --> T2 : commit @ ts=20
+
+T1 -> VC : read(X) @ ts=10
+VC --> T1 : v1 (still visible)
+
+T2 -> VC : read(X) @ ts=20
+VC --> T2 : v2
+@enduml

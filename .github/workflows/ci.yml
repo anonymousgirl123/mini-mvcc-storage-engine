@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build, Test & Profile
     runs-on: ubuntu-latest
 
     steps:
@@ -29,15 +30,6 @@ jobs:
           free -h
           cat /proc/cpuinfo | head -20
 
-      - name: Compile project
-        run: |
-          mkdir -p out
-          javac -d out $(find src/main/java -name "*.java")
-
-      - name: Run MVCC sanity test
-        run: |
-          java -cp out com.minimvcc.Main
-
       - name: Build with Maven
         run: mvn -B clean package
 
@@ -46,11 +38,11 @@ jobs:
 
       - name: Lightweight benchmark (CI-safe)
         run: |
-          java -Xms128m -Xmx128m -cp out com.minimvcc.Main
+          java -Xms128m -Xmx128m -cp target/classes com.minimvcc.Main
 
       - name: Run benchmark
         run: |
-          java -Xms128m -Xmx128m -cp out com.minimvcc.benchmark.BenchmarkRunner
+          java -Xms128m -Xmx128m -cp target/classes com.minimvcc.benchmark.BenchmarkRunner
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4
@@ -63,10 +55,46 @@ jobs:
           java \
             -Xms128m -Xmx128m \
             -XX:StartFlightRecording=filename=mini-mvcc.jfr,duration=20s,settings=profile \
-            -cp out com.minimvcc.Main
+            -cp target/classes com.minimvcc.Main
 
       - name: Upload JFR recording
         uses: actions/upload-artifact@v4
         with:
           name: jfr-recording
           path: mini-mvcc.jfr
+
+  diagrams:
+    name: Render PlantUML diagrams
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Download PlantUML
+        run: |
+          curl -L -o plantuml.jar \
+            https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
+
+      - name: Render diagrams
+        run: |
+          mkdir -p rendered-diagrams
+          java -jar plantuml.jar \
+            -tpng \
+            -o rendered-diagrams \
+            docs/diagrams/*.puml
+
+      - name: Upload rendered diagrams
+        uses: actions/upload-artifact@v4
+        with:
+          name: plantuml-diagrams
+          path: rendered-diagrams

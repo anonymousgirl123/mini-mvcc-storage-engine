@@ -1,4 +1,4 @@
-# MiniMVCC Storage Engine
+# MiniMVCC Storage Engine   ![CI](https://github.com/anonymousgirl123/mini-mvcc-storage-engine/actions/workflows/ci.yml/badge.svg?branch=main)
 
 MiniMVCC is a simplified Java storage engine designed to explore **MVCC**, **JVM memory behavior**, and **Linux internals**.
 

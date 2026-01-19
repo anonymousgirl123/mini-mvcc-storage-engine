@@ -88,10 +88,9 @@ jobs:
       - name: Render diagrams
         run: |
           mkdir -p rendered-diagrams
-          java -jar plantuml.jar \
-            -tpng \
-            -o rendered-diagrams \
-            docs/diagrams/*.puml
+          find docs/diagrams -name "*.puml" -print0 | \
+          xargs -0 java -jar plantuml.jar -tpng -o rendered-diagrams
+
 
       - name: Upload rendered diagrams
         uses: actions/upload-artifact@v4

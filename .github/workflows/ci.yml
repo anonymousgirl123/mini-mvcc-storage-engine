@@ -1,0 +1,43 @@
+name: MiniMVCC CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Show Java version
+        run: java -version
+
+      - name: Show OS & memory info (Linux internals signal)
+        run: |
+          uname -a
+          free -h
+          cat /proc/cpuinfo | head -20
+
+      - name: Compile project
+        run: |
+          mkdir -p out
+          javac -d out $(find src/main/java -name "*.java")
+
+      - name: Run MVCC sanity test
+        run: |
+          java -cp out com.minimvcc.Main
+
+      - name: Lightweight benchmark (CI-safe)
+        run: |
+          java -Xms128m -Xmx128m -cp out com.minimvcc.Main

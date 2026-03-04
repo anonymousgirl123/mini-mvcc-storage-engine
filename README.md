@@ -31,12 +31,12 @@ This repository demonstrates those concepts end-to-end in Java.
 
 ## Linux Observations
 - mmap shifts memory management to Linux page cache
-- RSS grows independently of JVM heap
+- RSS grows independently of the JVM heap
 - fsync dominates tail latency
 
 ## Durability Model
-Data is durable **only after explicit flush**.
-- fsync provides strongest guarantees
+Data is durable ** only after explicit flush **.
+- fsync provides the strongest guarantees
 - mmap.force() is OS-dependent
 
 ## Trade-offs
@@ -50,4 +50,5 @@ This project intentionally prioritizes clarity and observability over production
 - Enables post-run analysis of GC, allocation, and CPU behavior
 
 ## Note: Architecture diagrams are authored in PlantUML and rendered automatically in CI as build artifacts.
+
   

@@ -4,7 +4,7 @@ MiniMVCC is a simplified Java storage engine designed to explore **MVCC**, **JVM
 
 This project focuses on *how systems behave under load, memory pressure, and failure* rather than feature completeness.
 
-## Why this project?
+## Why this project? 
 Modern data platforms require deep understanding of:
 - Database internals (MVCC, isolation, versioning)
 - JVM memory & GC behavior
